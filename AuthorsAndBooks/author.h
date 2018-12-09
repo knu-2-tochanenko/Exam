@@ -3,17 +3,11 @@
 
 #include <QString>
 #include <QStringList>
-
-class Genre {
-public:
-    enum Name { SCIENCE_FICTION, SATIRE, DRAMA, ADVENTURE, ROMANCE, MYSTERY, HORROR,
-               GUIDE, SCIENCE, MATH, HISTORY, POETRY, COMICS, DICTIONARY, ART, BIOGRAPHY,
-               DIARY, FANTASY, UNRECOGNIZED };
-    static QString to_string();
-};
+#include "utilityclass.h"
 
 class Author {
 public:
+    Author();
     Author(QString name, QStringList nickNames, Genre::Name genre, int ID);
 
     QString getName() const;
@@ -22,6 +16,8 @@ public:
     Genre::Name getGenre() const;
     int getID() const;
 
+    //  Generate random
+    static Author* generate(int ID);
 private:
     int ID;
     QString name;

@@ -1,80 +1,113 @@
 #include "book.h"
+#include "time.h"
 
-Book::Book(QString name, Genre::Name genre, QDate date, int pages) {
+Book::Book(QString name, Genre::Name genre, QDate* date, int pages) {
+    this->name = name;
+    this->genre = genre;
+    this->date = date;
+    this->pages = pages;
+}
 
+Book::Book(Book &book) {
+    this->ISBN = book.ISBN;
+    this->name = book.name;
+    this->date = book.date;
+    this->genre = book.genre;
+    this->pages = book.pages;
 }
 
 Genre::Name Book::getGenre() const {
-
+    return this->genre;
 }
 
 QString Book::getName() const {
-
+    return this->name;
 }
 
-QDate Book::getDate() const {
-
+QDate* Book::getDate() const {
+    return this->date;
 }
 
 int Book::getPages() const {
-
+    return this->pages;
 }
 
-int Book::getISGN() const {
-
+QString Book::getISBN() const {
+    return this->ISBN;
 }
 
-Book Book::generate() {
-
+Book* Book::generate() {
+    srand(clock_t());
+    Book* book = new Book();
+    book->ISBN = "";
+    for (int i = 0; i < 13; i++)
+        book->ISBN += static_cast<char>(rand() % 10 + '0');
+    int year = rand() % 519 + 1500;
+    int month = rand() % 12;
+    int day = rand() % 31;
+    Utility.normalize(year, month, day);
+    book->date = new QDate(year, month, day);
+    book->name = Utility.getRandomTitle();
+    book->genre = Genre::getRandom();
+    book->pages = rand() % MAX_PAGES;
+    return book;
 }
 
-SingleAuthorBook::SingleAuthorBook(QString name, Genre::Name genre, QDate date, int pages,
+SingleAuthorBook::SingleAuthorBook(QString name, Genre::Name genre, QDate* date, int pages,
     Author *author) : Book(name, genre, date, pages) {
-
+    this->author = author;
 }
 
-SingleAuthorBook::SingleAuthorBook(Book book, Author author) {
-
+SingleAuthorBook::SingleAuthorBook(Book book, Author* author)
+    : Book(book) {
+    this->author = author;
 }
 
 Author *SingleAuthorBook::getAuthor() const {
-
+    return this->author;
 }
 
-SingleAuthorBook SingleAuthorBook::generate() {
-
+SingleAuthorBook* SingleAuthorBook::generate() {
+    //  TODO : Write method
 }
 
-MultiAuthorBook::MultiAuthorBook(QString name, Genre::Name genre, QDate date, int pages,
-    QMap<Author *, double> authors) : Book(name, genre, date, pages) {
-
+MultiAuthorBook::MultiAuthorBook(QString name, Genre::Name genre, QDate* date, int pages,
+    QMap<AuthorName, double> authors) : Book(name, genre, date, pages) {
+    this->authors = authors;
 }
 
-MultiAuthorBook::MultiAuthorBook(Book book, QMap<Author *, double> authors) {
-
+MultiAuthorBook::MultiAuthorBook(Book book, QMap<AuthorName, double> authors)
+    : Book(book) {
+    this->authors = authors;
 }
 
-QMap<Author *, double> MultiAuthorBook::getAuthors() const {
-
+QMap<AuthorName, double> MultiAuthorBook::getAuthors() const {
+    return this->authors;
 }
 
-MultiAuthorBook MultiAuthorBook::generate() {
-
+MultiAuthorBook* MultiAuthorBook::generate() {
+    //  TODO : Write method
 }
 
-AuthorByChapterBook::AuthorByChapterBook(QString name, Genre::Name genre, QDate date, int pages,
-    QMap<int, Author *> authors) : Book(name, genre, date, pages) {
-
+AuthorByChapterBook::AuthorByChapterBook(QString name, Genre::Name genre, QDate* date, int pages,
+    QMap<int, AuthorName> authors) : Book(name, genre, date, pages) {
+    this->authors = authors;
 }
 
-AuthorByChapterBook::AuthorByChapterBook(Book book, QMap<int, Author *> authors) {
-
+AuthorByChapterBook::AuthorByChapterBook(Book book, QMap<int, AuthorName> authors)
+    : Book(book) {
+    this->authors = authors;
 }
 
-QMap<int, Author *> AuthorByChapterBook::getAuthors() const {
-
+QMap<int, AuthorName> AuthorByChapterBook::getAuthors() const {
+    return this->authors;
 }
 
-AuthorByChapterBook AuthorByChapterBook::generate() {
+AuthorByChapterBook* AuthorByChapterBook::generate() {
+    //  TODO : Write method
+}
 
+AuthorName::AuthorName(Author *author, int name) {
+    this->name = name;
+    this->author = author;
 }

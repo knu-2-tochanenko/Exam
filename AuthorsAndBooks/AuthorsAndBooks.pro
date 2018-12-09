@@ -28,12 +28,14 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     author.cpp \
-    book.cpp
+    book.cpp \
+    utilityclass.cpp
 
 HEADERS += \
         mainwindow.h \
     author.h \
-    book.h
+    book.h \
+    utilityclass.h
 
 FORMS += \
         mainwindow.ui
