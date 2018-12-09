@@ -15,6 +15,7 @@ public:
     QString getNickName(int number) const;
     Genre::Name getGenre() const;
     int getID() const;
+    int getNicknamesCount() const;
 
     //  Generate random
     static Author* generate(int ID);

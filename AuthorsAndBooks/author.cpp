@@ -16,10 +16,10 @@ QStringList Author::getNickNames() const {
 }
 
 QString Author::getNickName(int number) const {
-    if (number >= this->nickNames.size())
+    if (number > this->nickNames.size() || number <= 0)
         return "";
     else
-        return this->nickNames[number];
+        return this->nickNames[number - 1];
 }
 
 Genre::Name Author::getGenre() const {
@@ -28,6 +28,10 @@ Genre::Name Author::getGenre() const {
 
 int Author::getID() const {
     return this->ID;
+}
+
+int Author::getNicknamesCount() const {
+    return this->nickNames.size();
 }
 
 Author *Author::generate(int ID) {

@@ -4,6 +4,7 @@
 #include <QStringList>
 
 int const MAX_PAGES = 2048;
+int const MAX_CHAPTERS = 16;
 
 class UtilityClass {
 public:

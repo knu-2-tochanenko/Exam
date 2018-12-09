@@ -16,6 +16,14 @@ Book::Book(Book &book) {
     this->pages = book.pages;
 }
 
+Book::Book(Book *book) {
+    this->ISBN = book->ISBN;
+    this->name = book->name;
+    this->date = book->date;
+    this->genre = book->genre;
+    this->pages = book->pages;
+}
+
 Genre::Name Book::getGenre() const {
     return this->genre;
 }
@@ -54,39 +62,50 @@ Book* Book::generate() {
 }
 
 SingleAuthorBook::SingleAuthorBook(QString name, Genre::Name genre, QDate* date, int pages,
-    Author *author) : Book(name, genre, date, pages) {
-    this->author = author;
+    AuthorName& author) : Book(name, genre, date, pages), author(author) {
 }
 
-SingleAuthorBook::SingleAuthorBook(Book book, Author* author)
-    : Book(book) {
-    this->author = author;
+SingleAuthorBook::SingleAuthorBook(Book* book, AuthorName& author)
+    : Book(book), author(author) {
 }
 
-Author *SingleAuthorBook::getAuthor() const {
+AuthorName SingleAuthorBook::getAuthor() const {
     return this->author;
 }
 
-SingleAuthorBook* SingleAuthorBook::generate() {
-    //  TODO : Write method
+SingleAuthorBook* SingleAuthorBook::generate(int ID) {
+    Author* newAuthor = Author::generate(ID);
+    AuthorName newAuthorName(newAuthor, rand() % (newAuthor->getNicknamesCount() + 1));
+    SingleAuthorBook* newBook = new SingleAuthorBook(Book::generate(), newAuthorName);
+    return newBook;
 }
 
 MultiAuthorBook::MultiAuthorBook(QString name, Genre::Name genre, QDate* date, int pages,
-    QMap<AuthorName, double> authors) : Book(name, genre, date, pages) {
+    QMap<AuthorName, int> authors) : Book(name, genre, date, pages) {
     this->authors = authors;
 }
 
-MultiAuthorBook::MultiAuthorBook(Book book, QMap<AuthorName, double> authors)
+MultiAuthorBook::MultiAuthorBook(Book* book, QMap<AuthorName, int> authors)
     : Book(book) {
     this->authors = authors;
 }
 
-QMap<AuthorName, double> MultiAuthorBook::getAuthors() const {
+QMap<AuthorName, int> MultiAuthorBook::getAuthors() const {
     return this->authors;
 }
 
-MultiAuthorBook* MultiAuthorBook::generate() {
-    //  TODO : Write method
+MultiAuthorBook* MultiAuthorBook::generate(QVector<int> IDs) {
+    QMap<AuthorName, int> newAuthors;
+    int activityCount = 100, activity;
+    for (int i = 0; i < IDs.size(); i++) {
+        Author* author = Author::generate(IDs[i]);
+        AuthorName newAuthorName(author, rand() % (author->getNicknamesCount() + 1));
+        activity = rand() % (activityCount - (IDs.size() - i));
+        activityCount -= activity;
+        newAuthors.insert(newAuthorName, activity);
+    }
+    MultiAuthorBook* newBook = new MultiAuthorBook(Book::generate(), newAuthors);
+    return newBook;
 }
 
 AuthorByChapterBook::AuthorByChapterBook(QString name, Genre::Name genre, QDate* date, int pages,
@@ -94,7 +113,7 @@ AuthorByChapterBook::AuthorByChapterBook(QString name, Genre::Name genre, QDate*
     this->authors = authors;
 }
 
-AuthorByChapterBook::AuthorByChapterBook(Book book, QMap<int, AuthorName> authors)
+AuthorByChapterBook::AuthorByChapterBook(Book* book, QMap<int, AuthorName> authors)
     : Book(book) {
     this->authors = authors;
 }
@@ -103,8 +122,26 @@ QMap<int, AuthorName> AuthorByChapterBook::getAuthors() const {
     return this->authors;
 }
 
-AuthorByChapterBook* AuthorByChapterBook::generate() {
-    //  TODO : Write method
+//  Some authors might be lost
+AuthorByChapterBook* AuthorByChapterBook::generate(QVector<int> IDs) {
+    QMap<int, AuthorName> newAuthors;
+    QVector<Author*> authorsList;
+    int randomAuthor;
+
+    for (int i = 0; i < IDs.size(); i++) {
+        Author* author = Author::generate(IDs[i]);
+        authorsList.push_back(author);
+    }
+
+    int chapters = rand() % MAX_CHAPTERS;
+    for (int i = 0; i < chapters; i++) {
+        randomAuthor = rand() % IDs.size();
+        AuthorName newAuthorName(authorsList[randomAuthor], rand() %
+                                 (authorsList[randomAuthor]->getNicknamesCount() + 1));
+        newAuthors.insert(i, newAuthorName);
+    }
+    AuthorByChapterBook* newBook = new AuthorByChapterBook(Book::generate(), newAuthors);
+    return newBook;
 }
 
 AuthorName::AuthorName(Author *author, int name) {
