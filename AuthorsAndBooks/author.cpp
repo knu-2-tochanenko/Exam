@@ -1,4 +1,5 @@
 #include "author.h"
+#include "time.h"
 
 Author::Author(QString name, QStringList nickNames, Genre::Name genre, int ID) {
     this->name = name;
@@ -16,8 +17,10 @@ QStringList Author::getNickNames() const {
 }
 
 QString Author::getNickName(int number) const {
+    if (number == 0)
+        return this->name;
     if (number > this->nickNames.size() || number <= 0)
-        return "";
+        return this->name;
     else
         return this->nickNames[number - 1];
 }
@@ -35,6 +38,7 @@ int Author::getNicknamesCount() const {
 }
 
 Author *Author::generate(int ID) {
+    srand(clock_t());
     Author* newAuthor = new Author();
     newAuthor->ID = ID;
     newAuthor->name = Utility.getRandomName();

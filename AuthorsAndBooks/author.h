@@ -7,7 +7,7 @@
 
 class Author {
 public:
-    Author();
+    Author() = default;
     Author(QString name, QStringList nickNames, Genre::Name genre, int ID);
 
     QString getName() const;
@@ -18,7 +18,7 @@ public:
     int getNicknamesCount() const;
 
     //  Generate random
-    static Author* generate(int ID);
+    static Author *generate(int ID);
 private:
     int ID;
     QString name;

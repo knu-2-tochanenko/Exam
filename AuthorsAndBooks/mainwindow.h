@@ -16,9 +16,39 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-
+private slots:
+    void on_buttonGenerateAuthor_clicked();
+    void on_buttonGenerateBook_clicked();
 
 private:
+
+    //  Updates all views
+    void update();
+    void putBooks();
+    void putAuthors();
+    QVector<Book*> selectedBooks; //    Vector for selecting books
+
+    //  Selected author
+    Author* filter;
+
+    //  Generates data
+    void generateBooks();
+    void generateAuthors();
+
+    //  Generates random author
+    Author *generateAuthor();
+
+    //  Generates random number and nickname book
+    //  with given authors
+    SingleAuthorBook *generateSingleAuthorBook();
+    MultiAuthorBook *generateMultiAuthorBook();
+    AuthorByChapterBook *generateAuthorByChapterBook();
+
+    //  Data
+    QVector<Author*> authors;
+    QVector<SingleAuthorBook*> singleAuthorBooks;
+    QVector<MultiAuthorBook*> multiAuthorBooks;
+    QVector<AuthorByChapterBook*> authorByChapterBooks;
     Ui::MainWindow *ui;
 };
 

@@ -12,6 +12,7 @@ public:
     QString getRandomName();
     QString getRandomTitle();
     void normalize(int &year, int &month, int&day);
+    void errorMSG(QString message);
 
 private:
     int namesSize;

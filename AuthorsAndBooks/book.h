@@ -11,8 +11,21 @@
 struct AuthorName {
     Author* author;
     int name;
+    AuthorName() = default;
     AuthorName(Author *author, int name);
+    AuthorName getAuthor();
 };
+
+struct AuthorWithPercentage {
+    Author* author;
+    int name;
+    int percentage;
+    AuthorWithPercentage() = default;
+    AuthorWithPercentage(Author *author, int name, int percentage);
+    AuthorName getAuthor();
+};
+
+//////////////////////////////////////////////////
 
 class Book {
 public:
@@ -28,8 +41,13 @@ public:
     int getPages() const;
     QString getISBN() const;
 
+    //  Get authors list for displaying the book
+    QVector<Author*> getAuthorsList(){ return QVector<Author*>(); }
+    QVector<AuthorName> getAuthorsWithNick(){ return QVector<AuthorName>(); }
+    bool hasAuthor(Author* author) { return false; };
+
     //  Generate random
-    static Book* generate();
+    static Book *generate();
 private:
     QString ISBN;       //  It'll be generated randomly
     QString name;
@@ -40,45 +58,66 @@ private:
 
 void normalize(int& year, int& month, int& day);
 
+//////////////////////////////////////////////////
+
 class SingleAuthorBook : public Book {
 public:
     SingleAuthorBook() = default;
     SingleAuthorBook(QString name, Genre::Name genre, QDate* date, int pages, AuthorName& author);
-    SingleAuthorBook(Book* book, AuthorName& author);
+    SingleAuthorBook(Book* book, AuthorName const &author);
 
-    AuthorName getAuthor() const;
+    QVector<AuthorName> getAuthors() const;
+    bool hasAuthor(Author* author);
+
+    //  Get authors list for displaying the book
+    QVector<Author*> getAuthorsList();
+    QVector<AuthorName> getAuthorsWithNick() const;
 
     //  Generate random
-    static SingleAuthorBook* generate(AuthorName &authorName);
+    static SingleAuthorBook *generate(AuthorName const &authorName);
 private:
     AuthorName author;
 };
 
+//////////////////////////////////////////////////
+
 class MultiAuthorBook : public Book {
 public:
     MultiAuthorBook() = default;
-    MultiAuthorBook(QString name, Genre::Name genre, QDate* date, int pages, QMap<AuthorName, int> authors);
-    MultiAuthorBook(Book* book, QMap<AuthorName, int> authors);
+    MultiAuthorBook(QString name, Genre::Name genre, QDate* date, int pages, QVector<AuthorWithPercentage> authors);
+    MultiAuthorBook(Book* book, QVector<AuthorWithPercentage> const authors);
 
-    QMap<AuthorName, int> getAuthors() const;
+    QVector<AuthorName> getAuthorsWithNick();
+    QVector<AuthorWithPercentage> getAuthors() const;
+    bool hasAuthor(Author* author);
+
+    //  Get authors list for displaying the book
+    QVector<Author*> getAuthorsList();
 
     //  Generate random
-    static MultiAuthorBook* generate(QMap<AuthorName, int> &authorsMap);
+    static MultiAuthorBook *generate(QVector<AuthorWithPercentage> const &authorsMap);
 private:
     //  Author - to coeff
-    QMap<AuthorName, int> authors;
+    QVector<AuthorWithPercentage> authors;
 };
+
+//////////////////////////////////////////////////
 
 class AuthorByChapterBook : public Book {
 public:
     AuthorByChapterBook() = default;
     AuthorByChapterBook(QString name, Genre::Name genre, QDate* date, int pages, QMap<int, AuthorName> authors);
-    AuthorByChapterBook(Book* book, QMap<int, AuthorName> authors);
+    AuthorByChapterBook(Book* book, QMap<int, AuthorName> const authors);
 
     QMap<int, AuthorName> getAuthors() const;
+    bool hasAuthor(Author* author);
+
+    //  Get authors list for displaying the book
+    QVector<Author*> getAuthorsList();
+    QVector<AuthorName> getAuthorsWithNick();
 
     //  Generate random
-    static AuthorByChapterBook* generate(QMap<int, AuthorName> &authorsMap);
+    static AuthorByChapterBook *generate(QMap<int, AuthorName> const &authorsMap);
 private:
     //  Chapter - to Author
     QMap<int, AuthorName> authors;

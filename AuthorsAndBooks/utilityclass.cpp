@@ -1,6 +1,7 @@
 #include "utilityclass.h"
 #include <time.h>
 #include <random>
+#include <QMessageBox>
 
 UtilityClass::UtilityClass() {
     this->namesSize = this->names.size();
@@ -9,7 +10,7 @@ UtilityClass::UtilityClass() {
 }
 
 QString UtilityClass::getRandomName() {
-    srand(clock_t());
+    //srand(clock_t());
     int name = rand() % this->namesSize;
     int lastName = rand() % this->lastNamesSize;
     return this->names[name] + " " + this->lastNames[lastName];
@@ -22,7 +23,7 @@ QString UtilityClass::getRandomTitle() {
 }
 
 //  Check if generated date is valid. If not, correct it
-void normalize(int &year, int &month, int &day) {
+void UtilityClass::normalize(int &year, int &month, int &day) {
     switch (month) {
     case 2:
         if ((year % 400 == 0) ||
@@ -43,6 +44,13 @@ void normalize(int &year, int &month, int &day) {
         day %= 30;
         break;
     }
+}
+
+void UtilityClass::errorMSG(QString message) {
+    QMessageBox messageBox;
+    messageBox.setText(message);
+    messageBox.setIcon(QMessageBox::Warning);
+    messageBox.exec();
 }
 
 QString Genre::to_string(Genre::Name name) {

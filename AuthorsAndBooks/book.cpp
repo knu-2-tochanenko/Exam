@@ -65,34 +65,75 @@ SingleAuthorBook::SingleAuthorBook(QString name, Genre::Name genre, QDate* date,
     AuthorName& author) : Book(name, genre, date, pages), author(author) {
 }
 
-SingleAuthorBook::SingleAuthorBook(Book* book, AuthorName& author)
+SingleAuthorBook::SingleAuthorBook(Book* book, AuthorName const &author)
     : Book(book), author(author) {
 }
 
-AuthorName SingleAuthorBook::getAuthor() const {
-    return this->author;
+QVector<AuthorName> SingleAuthorBook::getAuthors() const {
+    QVector<AuthorName> res;
+    res.push_back(this->author);
+    return res;
 }
 
-SingleAuthorBook *SingleAuthorBook::generate(AuthorName &authorName) {
+bool SingleAuthorBook::hasAuthor(Author *author) {
+    return (this->author.author->getID() == author->getID());
+}
+
+QVector<Author *> SingleAuthorBook::getAuthorsList() {
+    QVector<Author*> res;
+    res.push_back(this->author.author);
+    return res;
+}
+
+QVector<AuthorName> SingleAuthorBook::getAuthorsWithNick() const {
+    QVector<AuthorName> res;
+    res.push_back(this->author);
+    return res;
+}
+
+SingleAuthorBook *SingleAuthorBook::generate(AuthorName const &authorName) {
     SingleAuthorBook* newBook = new SingleAuthorBook(Book::generate(), authorName);
     return newBook;
 }
 
 MultiAuthorBook::MultiAuthorBook(QString name, Genre::Name genre, QDate* date, int pages,
-    QMap<AuthorName, int> authors) : Book(name, genre, date, pages) {
+    QVector<AuthorWithPercentage> authors) : Book(name, genre, date, pages) {
     this->authors = authors;
 }
 
-MultiAuthorBook::MultiAuthorBook(Book* book, QMap<AuthorName, int> authors)
+MultiAuthorBook::MultiAuthorBook(Book* book, QVector<AuthorWithPercentage> authors)
     : Book(book) {
     this->authors = authors;
 }
 
-QMap<AuthorName, int> MultiAuthorBook::getAuthors() const {
+QVector<AuthorName> MultiAuthorBook::getAuthorsWithNick() {
+    int authorsSize = this->authors.size();
+    QVector<AuthorName> res;
+    for (int i = 0; i < authorsSize; i++)
+        res.push_back(AuthorName(this->authors[i].author, this->authors[i].name));
+    return res;
+}
+
+QVector<AuthorWithPercentage> MultiAuthorBook::getAuthors() const {
     return this->authors;
 }
 
-MultiAuthorBook *MultiAuthorBook::generate(QMap<AuthorName, int> &authorsMap) {
+bool MultiAuthorBook::hasAuthor(Author *author) {
+    int authorsSize = this->authors.size();
+    for (int i = 0; i < authorsSize; i++)
+        if (this->authors[i].author->getID() == author->getID())
+            return true;
+    return false;
+}
+
+QVector<Author *> MultiAuthorBook::getAuthorsList() {
+    QVector<Author*> res;
+    for (int i = 0; i < this->authors.size(); i++)
+        res.push_back(this->authors[i].author);
+    return res;
+}
+
+MultiAuthorBook *MultiAuthorBook::generate(QVector<AuthorWithPercentage> const &authorsMap) {
     MultiAuthorBook* newBook = new MultiAuthorBook(Book::generate(), authorsMap);
     return newBook;
 }
@@ -111,7 +152,29 @@ QMap<int, AuthorName> AuthorByChapterBook::getAuthors() const {
     return this->authors;
 }
 
-AuthorByChapterBook *AuthorByChapterBook::generate(QMap<int, AuthorName> &authorsMap) {
+bool AuthorByChapterBook::hasAuthor(Author *author) {
+    for (int i = 0; i < this->authors.size(); i++)
+        if (this->authors[i].author->getID() == author->getID())
+            return true;
+    return false;
+}
+
+QVector<Author *> AuthorByChapterBook::getAuthorsList() {
+    QVector<Author*> res;
+    for (int i = 0; i < this->authors.size(); i++)
+        res.push_back(this->authors[i].author);
+    return res;
+}
+
+QVector<AuthorName> AuthorByChapterBook::getAuthorsWithNick() {
+    int authorsSize = this->authors.size();
+    QVector<AuthorName> res;
+    for (int i = 0; i < authorsSize; i++)
+        res.push_back(AuthorName(this->authors[i].author, this->authors[i].name));
+    return res;
+}
+
+AuthorByChapterBook *AuthorByChapterBook::generate(QMap<int, AuthorName> const &authorsMap) {
     AuthorByChapterBook* newBook = new AuthorByChapterBook(Book::generate(), authorsMap);
     return newBook;
 }
@@ -119,4 +182,20 @@ AuthorByChapterBook *AuthorByChapterBook::generate(QMap<int, AuthorName> &author
 AuthorName::AuthorName(Author *author, int name) {
     this->name = name;
     this->author = author;
+}
+
+AuthorName AuthorName::getAuthor() {
+    AuthorName res(this->author, this->name);
+    return res;
+}
+
+AuthorWithPercentage::AuthorWithPercentage(Author *author, int name, int percentage) {
+    this->author = author;
+    this->name = name;
+    this->percentage = percentage;
+}
+
+AuthorName AuthorWithPercentage::getAuthor() {
+    AuthorName res(this->author, this->name);
+    return res;
 }
