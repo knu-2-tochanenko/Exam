@@ -49,7 +49,7 @@ public:
     AuthorName getAuthor() const;
 
     //  Generate random
-    static SingleAuthorBook* generate(int ID);
+    static SingleAuthorBook* generate(AuthorName &authorName);
 private:
     AuthorName author;
 };
@@ -63,7 +63,7 @@ public:
     QMap<AuthorName, int> getAuthors() const;
 
     //  Generate random
-    static MultiAuthorBook* generate(QVector<int> IDs);
+    static MultiAuthorBook* generate(QMap<AuthorName, int> &authorsMap);
 private:
     //  Author - to coeff
     QMap<AuthorName, int> authors;
@@ -78,7 +78,7 @@ public:
     QMap<int, AuthorName> getAuthors() const;
 
     //  Generate random
-    static AuthorByChapterBook* generate(QVector<int> IDs);
+    static AuthorByChapterBook* generate(QMap<int, AuthorName> &authorsMap);
 private:
     //  Chapter - to Author
     QMap<int, AuthorName> authors;

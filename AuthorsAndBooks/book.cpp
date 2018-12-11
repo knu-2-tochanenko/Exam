@@ -73,10 +73,8 @@ AuthorName SingleAuthorBook::getAuthor() const {
     return this->author;
 }
 
-SingleAuthorBook* SingleAuthorBook::generate(int ID) {
-    Author* newAuthor = Author::generate(ID);
-    AuthorName newAuthorName(newAuthor, rand() % (newAuthor->getNicknamesCount() + 1));
-    SingleAuthorBook* newBook = new SingleAuthorBook(Book::generate(), newAuthorName);
+SingleAuthorBook *SingleAuthorBook::generate(AuthorName &authorName) {
+    SingleAuthorBook* newBook = new SingleAuthorBook(Book::generate(), authorName);
     return newBook;
 }
 
@@ -94,17 +92,8 @@ QMap<AuthorName, int> MultiAuthorBook::getAuthors() const {
     return this->authors;
 }
 
-MultiAuthorBook* MultiAuthorBook::generate(QVector<int> IDs) {
-    QMap<AuthorName, int> newAuthors;
-    int activityCount = 100, activity;
-    for (int i = 0; i < IDs.size(); i++) {
-        Author* author = Author::generate(IDs[i]);
-        AuthorName newAuthorName(author, rand() % (author->getNicknamesCount() + 1));
-        activity = rand() % (activityCount - (IDs.size() - i));
-        activityCount -= activity;
-        newAuthors.insert(newAuthorName, activity);
-    }
-    MultiAuthorBook* newBook = new MultiAuthorBook(Book::generate(), newAuthors);
+MultiAuthorBook *MultiAuthorBook::generate(QMap<AuthorName, int> &authorsMap) {
+    MultiAuthorBook* newBook = new MultiAuthorBook(Book::generate(), authorsMap);
     return newBook;
 }
 
@@ -122,25 +111,8 @@ QMap<int, AuthorName> AuthorByChapterBook::getAuthors() const {
     return this->authors;
 }
 
-//  Some authors might be lost
-AuthorByChapterBook* AuthorByChapterBook::generate(QVector<int> IDs) {
-    QMap<int, AuthorName> newAuthors;
-    QVector<Author*> authorsList;
-    int randomAuthor;
-
-    for (int i = 0; i < IDs.size(); i++) {
-        Author* author = Author::generate(IDs[i]);
-        authorsList.push_back(author);
-    }
-
-    int chapters = rand() % MAX_CHAPTERS;
-    for (int i = 0; i < chapters; i++) {
-        randomAuthor = rand() % IDs.size();
-        AuthorName newAuthorName(authorsList[randomAuthor], rand() %
-                                 (authorsList[randomAuthor]->getNicknamesCount() + 1));
-        newAuthors.insert(i, newAuthorName);
-    }
-    AuthorByChapterBook* newBook = new AuthorByChapterBook(Book::generate(), newAuthors);
+AuthorByChapterBook *AuthorByChapterBook::generate(QMap<int, AuthorName> &authorsMap) {
+    AuthorByChapterBook* newBook = new AuthorByChapterBook(Book::generate(), authorsMap);
     return newBook;
 }
 
