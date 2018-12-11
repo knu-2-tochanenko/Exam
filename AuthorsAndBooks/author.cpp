@@ -50,3 +50,13 @@ Author *Author::generate(int ID) {
     newAuthor->genre = Genre::getRandom();
     return newAuthor;
 }
+
+void Author::generateValues() {
+    srand(clock_t());
+    this->name = Utility.getRandomName();
+    int numberOfNickNames = rand() % 4;
+    this->nickNames.clear();
+    for (int i = 0; i < numberOfNickNames; i++)
+        this->nickNames.push_back(Utility.getRandomName());
+    this->genre = Genre::getRandom();
+}

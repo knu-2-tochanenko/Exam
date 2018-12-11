@@ -4,6 +4,9 @@
 #include <QString>
 #include <QStringList>
 #include "utilityclass.h"
+#include <vector>
+
+using std::vector;
 
 class Author {
 public:
@@ -19,6 +22,7 @@ public:
 
     //  Generate random
     static Author *generate(int ID);
+    void generateValues();
 private:
     int ID;
     QString name;

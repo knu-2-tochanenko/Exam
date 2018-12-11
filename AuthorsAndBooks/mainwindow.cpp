@@ -10,6 +10,8 @@
 #include <algorithm>
 #include <vector>
 
+using namespace std;
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow) {
@@ -24,9 +26,12 @@ MainWindow::MainWindow(QWidget *parent) :
     this->filter = NULL;
 
     //  Generate 5 random authors
+    srand(clock_t());
     this->authors.reserve(5);
     for (int i = 0; i < 5; i++) {
-        this->authors.emplace_back(Author::generate(i));
+        Author* newAuthor = Author::generate(i);
+        newAuthor->generateValues();
+        this->authors.emplace_back(newAuthor);
     }
 
     update();
@@ -38,7 +43,9 @@ MainWindow::~MainWindow() {
 
 void MainWindow::on_buttonGenerateAuthor_clicked() {
     int newNumber = this->authors.size();
-    this->authors.push_back(Author::generate(newNumber));
+    Author* newAuthor = Author::generate(newNumber);
+    newAuthor->generateValues();
+    this->authors.emplace_back(newAuthor);
     update();
 }
 
@@ -159,7 +166,7 @@ void MainWindow::putBooks() {
 //  Puts authors to the authors list
 void MainWindow::putAuthors() {
     int authorsSize = this->authors.size();
-    QVector<AuthorName> bookAuthors;
+    vector<AuthorName> bookAuthors;
     ui->authorsList->clear();
     for (int i = 0; i < authorsSize; i++) {
         ui->authorsList->addItem(this->authors[i]->getName());

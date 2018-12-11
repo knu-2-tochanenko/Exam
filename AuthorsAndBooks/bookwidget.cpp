@@ -25,6 +25,7 @@ void BookWidget::update() {
     ui->bookPublishDate->setText(this->book->getDate()->toString(Qt::TextDate));
     ui->bookGenre->setText(Genre::to_string(this->book->getGenre()));
     ui->bookTitle->setText(this->book->getName());
+    ui->bookPages->setNum(this->book->getPages());
 
     //  Put all authors and their
     int numberOfAuthors = this->authors.size();

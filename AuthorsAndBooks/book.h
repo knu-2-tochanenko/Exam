@@ -7,6 +7,9 @@
 #include <QDate>
 #include <QMap>
 #include <QVector>
+#include <vector>
+
+using std::vector;
 
 struct AuthorName {
     Author* author;
@@ -54,6 +57,8 @@ private:
     Genre::Name genre;
     QDate* date;
     int pages;
+
+    void generateNumbers();
 };
 
 void normalize(int& year, int& month, int& day);
@@ -92,7 +97,7 @@ public:
     bool hasAuthor(Author* author);
 
     //  Get authors list for displaying the book
-    QVector<Author*> getAuthorsList();
+    vector<Author*> getAuthorsList();
 
     //  Generate random
     static MultiAuthorBook *generate(QVector<AuthorWithPercentage> const &authorsMap);

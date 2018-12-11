@@ -4,6 +4,10 @@
 #include <QWidget>
 #include "book.h"
 #include "author.h"
+#include <vector>
+#include <QVector>
+
+using std::vector;
 
 namespace Ui {
     class BookWidget;

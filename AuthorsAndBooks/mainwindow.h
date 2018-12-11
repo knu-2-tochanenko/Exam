@@ -4,6 +4,9 @@
 #include <QMainWindow>
 #include "author.h"
 #include "book.h"
+#include <vector>
+
+using std::vector;
 
 namespace Ui {
     class MainWindow;
@@ -26,7 +29,7 @@ private:
     void update();
     void putBooks();
     void putAuthors();
-    QVector<Book*> selectedBooks; //    Vector for selecting books
+    vector<Book*> selectedBooks; //    Vector for selecting books
 
     //  Selected author
     Author* filter;
@@ -45,10 +48,10 @@ private:
     AuthorByChapterBook *generateAuthorByChapterBook();
 
     //  Data
-    QVector<Author*> authors;
-    QVector<SingleAuthorBook*> singleAuthorBooks;
-    QVector<MultiAuthorBook*> multiAuthorBooks;
-    QVector<AuthorByChapterBook*> authorByChapterBooks;
+    vector<Author*> authors;
+    vector<SingleAuthorBook*> singleAuthorBooks;
+    vector<MultiAuthorBook*> multiAuthorBooks;
+    vector<AuthorByChapterBook*> authorByChapterBooks;
     Ui::MainWindow *ui;
 };
 
@@ -64,7 +67,7 @@ SingleAuthorBook* SingleAuthorBook::generate(int ID) {
 }
 
 
-MultiAuthorBook* MultiAuthorBook::generate(QVector<int> IDs) {
+MultiAuthorBook* MultiAuthorBook::generate(vector<int> IDs) {
     QMap<AuthorName, int> newAuthors;
     int activityCount = 100, activity;
     for (int i = 0; i < IDs.size(); i++) {
@@ -79,9 +82,9 @@ MultiAuthorBook* MultiAuthorBook::generate(QVector<int> IDs) {
 }
 
 
-AuthorByChapterBook* AuthorByChapterBook::generate(QVector<int> IDs) {
+AuthorByChapterBook* AuthorByChapterBook::generate(vector<int> IDs) {
     QMap<int, AuthorName> newAuthors;
-    QVector<Author*> authorsList;
+    vector<Author*> authorsList;
     int randomAuthor;
 
     for (int i = 0; i < IDs.size(); i++) {

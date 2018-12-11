@@ -10,7 +10,7 @@ UtilityClass::UtilityClass() {
 }
 
 QString UtilityClass::getRandomName() {
-    //srand(clock_t());
+    srand(clock_t());
     int name = rand() % this->namesSize;
     int lastName = rand() % this->lastNamesSize;
     return this->names[name] + " " + this->lastNames[lastName];

@@ -45,7 +45,7 @@ QString Book::getISBN() const {
 }
 
 Book* Book::generate() {
-    srand(clock_t());
+
     Book* book = new Book();
     book->ISBN = "";
     for (int i = 0; i < 13; i++)
@@ -59,6 +59,18 @@ Book* Book::generate() {
     book->genre = Genre::getRandom();
     book->pages = rand() % MAX_PAGES;
     return book;
+}
+
+void Book::generateNumbers() {
+    srand(clock_t());
+    int year = rand() % 519 + 1500;
+    int month = rand() % 12;
+    int day = rand() % 31;
+    Utility.normalize(year, month, day);
+    this->date = new QDate(year, month, day);
+    this->name = Utility.getRandomTitle();
+    this->genre = Genre::getRandom();
+    this->pages = rand() % MAX_PAGES;
 }
 
 SingleAuthorBook::SingleAuthorBook(QString name, Genre::Name genre, QDate* date, int pages,
@@ -126,8 +138,8 @@ bool MultiAuthorBook::hasAuthor(Author *author) {
     return false;
 }
 
-QVector<Author *> MultiAuthorBook::getAuthorsList() {
-    QVector<Author*> res;
+vector<Author *> MultiAuthorBook::getAuthorsList() {
+    vector<Author*> res;
     for (int i = 0; i < this->authors.size(); i++)
         res.push_back(this->authors[i].author);
     return res;
