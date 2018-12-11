@@ -8,6 +8,7 @@ BookWidget::BookWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::BookWidget) {
     ui->setupUi(this);
+
 }
 
 BookWidget::~BookWidget() {
