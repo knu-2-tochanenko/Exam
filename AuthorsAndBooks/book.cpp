@@ -62,7 +62,7 @@ Book* Book::generate() {
 }
 
 void Book::generateNumbers() {
-    srand(clock_t());
+     
     int year = rand() % 519 + 1500;
     int month = rand() % 12;
     int day = rand() % 31;

@@ -17,6 +17,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow) {
     ui->setupUi(this);
 
+    //srand();
+
     //  Add strings to ComboBox
     ui->filerMode->addItem("Date");
     ui->filerMode->addItem("Pages");
@@ -26,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->filter = NULL;
 
     //  Generate 5 random authors
-    srand(clock_t());
+     
     this->authors.reserve(5);
     for (int i = 0; i < 5; i++) {
         Author* newAuthor = Author::generate(i);
