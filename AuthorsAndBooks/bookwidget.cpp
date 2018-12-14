@@ -35,16 +35,24 @@ void BookWidget::update() {
     int fontHeight = fontMetrics.height();
     int height = fontHeight * numberOfAuthors;
 
-    ui->bookAuthors->setMinimumHeight(height);
-    ui->bookAuthors->setMaximumHeight(height);
+    ui->bookAuthors->setMinimumHeight(height + 20);
+    ui->bookAuthors->setMaximumHeight(height + 20);
 
     QString authorsString = "";
 
     for (int i = 0; i < numberOfAuthors; i++)
         authorsString += this->authors[i].author->getNickName(this->authors[i].name) + "\n";
 
-    this->setMinimumHeight(170 + height);
-    this->setMaximumHeight(170 + height);
+    ui->bookAuthors->setText(authorsString);
+
+    this->height = 140 + height;
+
+    this->setMinimumHeight(140 + height);
+    this->setMaximumHeight(140 + height);
+}
+
+int BookWidget::getHeight() {
+    return this->height;
 }
 
 void BookWidget::paintEvent(QPaintEvent *) {

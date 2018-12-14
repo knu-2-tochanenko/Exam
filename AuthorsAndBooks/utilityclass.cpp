@@ -97,5 +97,5 @@ QString Genre::to_string(Genre::Name name) {
 }
 
 Genre::Name Genre::getRandom() {
-    return static_cast<Genre::Name>(rand() % 19);
+    return static_cast<Genre::Name>(rand() % 18);
 }

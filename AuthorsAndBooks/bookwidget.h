@@ -25,12 +25,16 @@ public:
     //  Draws information
     void update();
 
+    //  Get height
+    int getHeight();
+
 private:
     Ui::BookWidget *ui;
 
     //  Data
     BaseBook* book;
     QVector<AuthorName> authors;
+    int height = 0;
 
     //  To draw bottom line
     void paintEvent(QPaintEvent *);

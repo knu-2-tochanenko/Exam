@@ -64,7 +64,7 @@ void MainWindow::on_buttonGenerateBook_clicked() {
             SingleAuthorBook::generate(AuthorName(this->authors[rand() % this->authors.size()], rand() % 3)));
     else if (bookType == 1) {
         QVector<AuthorWithPercentage> authorsMap;
-        int randomNumberOfAuthors = rand() % this->authors.size() / 2 + 1;
+        int randomNumberOfAuthors = rand() % (this->authors.size() / 2) + 1;
         int percentage = 100;
         for (int i = 0; i < randomNumberOfAuthors; i++) {
             Author* author = this->authors[rand() % this->authors.size()];
@@ -167,9 +167,9 @@ void MainWindow::putBooks() {
         QListWidgetItem *listWidgetItem = new QListWidgetItem(ui->booksList);
         ui->booksList->addItem(listWidgetItem);
         BookWidget *snv = new BookWidget;
-        snv->setStyleSheet("singleNoteView {border-bottom: 1px solid #BDBDBD}");
+        snv->setStyleSheet("BookWidget {border-bottom: 1px solid #BDBDBD}");
         snv->getInformation(selectedBooks[i], bookAuthors);
-        listWidgetItem->setSizeHint(QSize(snv->sizeHint().width(), 170));
+        listWidgetItem->setSizeHint(QSize(snv->sizeHint().width(), snv->getHeight()));
         ui->booksList->setItemWidget(listWidgetItem, snv);
     }
 }
