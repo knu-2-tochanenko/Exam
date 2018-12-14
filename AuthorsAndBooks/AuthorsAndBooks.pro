@@ -28,16 +28,24 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     author.cpp \
-    book.cpp \
     utilityclass.cpp \
-    bookwidget.cpp
+    bookwidget.cpp \
+    singleauthorbook.cpp \
+    multiauthorbook.cpp \
+    authorbychapterbook.cpp \
+    basebook.cpp \
+    singlebook.cpp
 
 HEADERS += \
         mainwindow.h \
     author.h \
-    book.h \
     utilityclass.h \
-    bookwidget.h
+    bookwidget.h \
+    singleauthorbook.h \
+    multiauthorbook.h \
+    authorbychapterbook.h \
+    basebook.h \
+    singlebook.h
 
 FORMS += \
         mainwindow.ui \

@@ -33,8 +33,14 @@ MainWindow::MainWindow(QWidget *parent) :
     for (int i = 0; i < 5; i++) {
         Author* newAuthor = Author::generate(i);
         newAuthor->generateValues();
-        this->authors.emplace_back(newAuthor);
+        this->authors.push_back(newAuthor);
     }
+
+    //  Connect with updating combobox
+    connect(ui->filerMode, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(switchcall(const QString&)));
+
+    //  Set smooth scroll
+    ui->booksList->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 
     update();
 }
@@ -47,7 +53,7 @@ void MainWindow::on_buttonGenerateAuthor_clicked() {
     int newNumber = this->authors.size();
     Author* newAuthor = Author::generate(newNumber);
     newAuthor->generateValues();
-    this->authors.emplace_back(newAuthor);
+    this->authors.push_back(newAuthor);
     update();
 }
 
@@ -56,7 +62,7 @@ void MainWindow::on_buttonGenerateBook_clicked() {
     if (bookType == 0)
         this->singleAuthorBooks.push_back(
             SingleAuthorBook::generate(AuthorName(this->authors[rand() % this->authors.size()], rand() % 3)));
-    if (bookType == 1) {
+    else if (bookType == 1) {
         QVector<AuthorWithPercentage> authorsMap;
         int randomNumberOfAuthors = rand() % this->authors.size() / 2 + 1;
         int percentage = 100;
@@ -79,6 +85,10 @@ void MainWindow::on_buttonGenerateBook_clicked() {
         this->authorByChapterBooks.push_back(
             AuthorByChapterBook::generate(authorsMap));
     }
+    update();
+}
+
+void MainWindow::switchcall(const QString &) {
     update();
 }
 
@@ -110,33 +120,33 @@ void MainWindow::update() {
     if (currentMode == "Date") {
         //  Bubble sort by date
         int booksSize = selectedBooks.size();
-        for (int i = 0; i < booksSize - 1; i++)
-            for (int j = 0; j < booksSize; j++)
-                if (selectedBooks[i]->getDate() > selectedBooks[i + 1]->getDate()) {
-                    Book* sub = selectedBooks[i];
-                    selectedBooks[i] = selectedBooks[i + 1];
-                    selectedBooks[i + 1] = sub;
+        for (int i = 0; i < booksSize; i++)
+            for (int j = 0; j < booksSize - 1; j++)
+                if (selectedBooks[j]->getDate() < selectedBooks[j + 1]->getDate()) {
+                    BaseBook* sub = selectedBooks[j];
+                    selectedBooks[j] = selectedBooks[j + 1];
+                    selectedBooks[j + 1] = sub;
                 }
     }
-    if (currentMode == "Pages") {
+    else if (currentMode == "Pages") {
         //  Bubble sort by pages
         int booksSize = selectedBooks.size();
-        for (int i = 0; i < booksSize - 1; i++)
-            for (int j = 0; j < booksSize; j++)
-                if (selectedBooks[i]->getPages() > selectedBooks[i + 1]->getPages()) {
-                    Book* sub = selectedBooks[i];
-                    selectedBooks[i] = selectedBooks[i + 1];
-                    selectedBooks[i + 1] = sub;
+        for (int i = 0; i < booksSize; i++)
+            for (int j = 0; j < booksSize - 1; j++)
+                if (selectedBooks[j]->getPages() > selectedBooks[j + 1]->getPages()) {
+                    BaseBook* sub = selectedBooks[j];
+                    selectedBooks[j] = selectedBooks[j + 1];
+                    selectedBooks[j + 1] = sub;
                 }
     }
-    if (currentMode == "Author's pages") {
+    else if (currentMode == "Author's pages") {
         if (this->filter == NULL) {
             Utility.errorMSG("Please, select author!");
             ui->filerMode->setCurrentIndex(0);
         }
         else  {
             int booksSize = selectedBooks.size();
-            //  Todo write method
+            //  TODO write method
         }
     }
     putBooks();

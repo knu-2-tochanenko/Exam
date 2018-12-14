@@ -2,3 +2,5 @@
 AuthorsAndBooks/AuthorsAndBooks\.pro\.user
 
 build-AuthorsAndBooks-Desktop_Qt_5_11_2_MSVC2017_64bit-Debug/
+
+build-AuthorsAndBooks-Desktop_Qt_5_11_2_MinGW_32bit-Debug/

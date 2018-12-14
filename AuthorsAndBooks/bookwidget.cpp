@@ -15,7 +15,7 @@ BookWidget::~BookWidget() {
     delete ui;
 }
 
-void BookWidget::getInformation(Book *book, QVector<AuthorName> authors) {
+void BookWidget::getInformation(BaseBook *book, QVector<AuthorName> authors) {
     this->book = book;
     this->authors = authors;
     update();

@@ -2,7 +2,7 @@
 #define BOOKWIDGET_H
 
 #include <QWidget>
-#include "book.h"
+#include "basebook.h"
 #include "author.h"
 #include <vector>
 #include <QVector>
@@ -20,7 +20,7 @@ public:
     explicit BookWidget(QWidget *parent = nullptr);
     ~BookWidget();
 
-    void getInformation(Book* book, QVector<AuthorName> authors);
+    void getInformation(BaseBook* book, QVector<AuthorName> authors);
 
     //  Draws information
     void update();
@@ -29,7 +29,7 @@ private:
     Ui::BookWidget *ui;
 
     //  Data
-    Book* book;
+    BaseBook* book;
     QVector<AuthorName> authors;
 
     //  To draw bottom line

@@ -3,8 +3,12 @@
 
 #include <QMainWindow>
 #include "author.h"
-#include "book.h"
+#include "basebook.h"
 #include <vector>
+
+#include "authorbychapterbook.h"
+#include "multiauthorbook.h"
+#include "singleauthorbook.h"
 
 using std::vector;
 
@@ -22,14 +26,13 @@ public:
 private slots:
     void on_buttonGenerateAuthor_clicked();
     void on_buttonGenerateBook_clicked();
-
+    void switchcall(const QString&);
 private:
-
     //  Updates all views
     void update();
     void putBooks();
     void putAuthors();
-    vector<Book*> selectedBooks; //    Vector for selecting books
+    QVector<BaseBook*> selectedBooks; //    Vector for selecting books
 
     //  Selected author
     Author* filter;
@@ -48,10 +51,10 @@ private:
     AuthorByChapterBook *generateAuthorByChapterBook();
 
     //  Data
-    vector<Author*> authors;
-    vector<SingleAuthorBook*> singleAuthorBooks;
-    vector<MultiAuthorBook*> multiAuthorBooks;
-    vector<AuthorByChapterBook*> authorByChapterBooks;
+    QVector<Author*> authors;
+    QVector<SingleAuthorBook*> singleAuthorBooks;
+    QVector<MultiAuthorBook*> multiAuthorBooks;
+    QVector<AuthorByChapterBook*> authorByChapterBooks;
     Ui::MainWindow *ui;
 };
 
