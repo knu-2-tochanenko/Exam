@@ -28,8 +28,8 @@ void UtilityClass::normalize(int &year, int &month, int &day) {
     case 2:
         if ((year % 400 == 0) ||
                 ((year % 400 != 0) && (year % 4 == 0) && (year % 100 != 0)))
-        day %= 29;
-        else day %= 28;
+        day %= 28;
+        else day %= 27;
         break;
     case 1:
     case 3:
@@ -38,12 +38,13 @@ void UtilityClass::normalize(int &year, int &month, int &day) {
     case 8:
     case 10:
     case 12:
-        day %= 31;
-        break;
-    default:
         day %= 30;
         break;
+    default:
+        day %= 29;
+        break;
     }
+    day++;
 }
 
 void UtilityClass::errorMSG(QString message) {

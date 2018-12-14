@@ -20,8 +20,8 @@ SingleBook *SingleBook::generate() {
         ISBN += static_cast<char>(rand() % 10 + '0');
     book->setISBN(ISBN);
     int year = rand() % 300 + 1753;
-    int month = rand() % 12;
-    int day = rand() % 31;
+    int month = rand() % 12 + 1;
+    int day = rand() % 31 + 1;
     Utility.normalize(year, month, day);
     book->setDate(new QDate(year, month, day));
     book->setName(Utility.getRandomTitle());
