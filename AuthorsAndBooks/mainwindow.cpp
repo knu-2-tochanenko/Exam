@@ -148,17 +148,23 @@ QString MainWindow::getGenres(QDate begin, QDate end, Author *author) {
 
     for (int i = 0; i < this->singleAuthorBooks.size(); i++)
         if (this->singleAuthorBooks[i]->hasAuthor(this->filter))
-            if (!res.contains(Genre::toString(this->singleAuthorBooks[i]->getGenre())))
+            if ((!res.contains(Genre::toString(this->singleAuthorBooks[i]->getGenre())))
+                && (isAfter(*this->singleAuthorBooks[i]->getDate(), begin))
+                && (isAfter(end, *this->singleAuthorBooks[i]->getDate())))
                 res.push_back(Genre::toString(this->singleAuthorBooks[i]->getGenre()));
 
     for (int i = 0; i < this->multiAuthorBooks.size(); i++)
         if (this->multiAuthorBooks[i]->hasAuthor(this->filter))
-            if (!res.contains(Genre::toString(this->multiAuthorBooks[i]->getGenre())))
+            if ((!res.contains(Genre::toString(this->multiAuthorBooks[i]->getGenre())))
+                && (isAfter(*this->multiAuthorBooks[i]->getDate(), begin))
+                && (isAfter(end, *this->multiAuthorBooks[i]->getDate())))
                 res.push_back(Genre::toString(this->multiAuthorBooks[i]->getGenre()));
 
     for (int i = 0; i < this->authorByChapterBooks.size(); i++)
         if (this->authorByChapterBooks[i]->hasAuthor(this->filter))
-            if (!res.contains(Genre::toString(this->authorByChapterBooks[i]->getGenre())))
+            if ((!res.contains(Genre::toString(this->authorByChapterBooks[i]->getGenre())))
+                    && (isAfter(*this->authorByChapterBooks[i]->getDate(), begin))
+                    && (isAfter(end, *this->authorByChapterBooks[i]->getDate())))
                 res.push_back(Genre::toString(this->authorByChapterBooks[i]->getGenre()));
 
     QString resString = "";
@@ -174,26 +180,32 @@ int MainWindow::getPagesOrBooks(QDate begin, QDate end, Author *author, bool mod
     int pages = 0, books = 0;
 
     for (int i = 0; i < this->singleAuthorBooks.size(); i++)
-        if (this->singleAuthorBooks[i]->hasAuthor(this->filter)) {
+        if ((this->singleAuthorBooks[i]->hasAuthor(this->filter))
+            && (isAfter(*this->singleAuthorBooks[i]->getDate(), begin))
+            && (isAfter(end, *this->singleAuthorBooks[i]->getDate()))){
             books++;
             pages += this->singleAuthorBooks[i]->getPages();
         }
 
     for (int i = 0; i < this->multiAuthorBooks.size(); i++)
-        if (this->multiAuthorBooks[i]->hasAuthor(this->filter)) {
+        if ((this->multiAuthorBooks[i]->hasAuthor(this->filter))
+            && (isAfter(*this->multiAuthorBooks[i]->getDate(), begin))
+            && (isAfter(end, *this->multiAuthorBooks[i]->getDate()))) {
             books++;
             QVector<AuthorWithPercentage> authorsBook = this->multiAuthorBooks[i]->getAuthors();
             for (int j = 0; j < authorsBook.size(); j++)
-                if (authorsBook[i].author->getID() == filter->getID())
-                    pages += this->multiAuthorBooks[i]->getPages() * authorsBook[i].percentage / 100;
+                if (authorsBook[j].author->getID() == filter->getID())
+                    pages += this->multiAuthorBooks[i]->getPages() * authorsBook[j].percentage / 100;
         }
 
     for (int i = 0; i < this->authorByChapterBooks.size(); i++)
-        if (this->authorByChapterBooks[i]->hasAuthor(this->filter)) {
+        if ((this->authorByChapterBooks[i]->hasAuthor(this->filter))
+            && (isAfter(*this->authorByChapterBooks[i]->getDate(), begin))
+            && (isAfter(end, *this->authorByChapterBooks[i]->getDate()))){
             books++;
             QVector<Author*> authorsBook = this->authorByChapterBooks[i]->getAuthorsList();
             for (int j = 0; j < authorsBook.size(); j++)
-                if (authorsBook[i]->getID() == filter->getID())
+                if (authorsBook[j]->getID() == filter->getID())
                     pages += this->authorByChapterBooks[i]->getPages() /
                             this->authorByChapterBooks[i]->numberOfChapters();
         }

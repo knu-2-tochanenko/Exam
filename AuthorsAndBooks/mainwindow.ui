@@ -34,6 +34,16 @@
       <pointsize>12</pointsize>
      </font>
     </property>
+    <property name="minimumDateTime">
+     <datetime>
+      <hour>0</hour>
+      <minute>0</minute>
+      <second>0</second>
+      <year>1753</year>
+      <month>1</month>
+      <day>1</day>
+     </datetime>
+    </property>
    </widget>
    <widget class="QDateEdit" name="dateEnd">
     <property name="geometry">
