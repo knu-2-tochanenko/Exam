@@ -17,8 +17,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow) {
     ui->setupUi(this);
 
-    //srand();
-
     //  Add strings to filter mode
     ui->filerMode->addItem("Date");
     ui->filerMode->addItem("Pages");
@@ -129,6 +127,15 @@ void MainWindow::onListMailItemClicked(QListWidgetItem *listWidgetItem) {
                 listWidgetItem->setTextColor(QColor(0, 121, 107));
                 break;
             }
+    update();
+}
+
+void MainWindow::on_dateBegin_dateChanged() {
+    displayAuthor();
+    update();
+}
+
+void MainWindow::on_dateEnd_dateChanged() {
     displayAuthor();
     update();
 }
@@ -184,7 +191,7 @@ int MainWindow::getPagesOrBooks(QDate begin, QDate end, Author *author, bool mod
             && (isAfter(*this->singleAuthorBooks[i]->getDate(), begin))
             && (isAfter(end, *this->singleAuthorBooks[i]->getDate()))){
             books++;
-            pages += this->singleAuthorBooks[i]->getPages();
+            pages += this->singleAuthorBooks[i]->countPages(filter);
         }
 
     for (int i = 0; i < this->multiAuthorBooks.size(); i++)
@@ -192,10 +199,7 @@ int MainWindow::getPagesOrBooks(QDate begin, QDate end, Author *author, bool mod
             && (isAfter(*this->multiAuthorBooks[i]->getDate(), begin))
             && (isAfter(end, *this->multiAuthorBooks[i]->getDate()))) {
             books++;
-            QVector<AuthorWithPercentage> authorsBook = this->multiAuthorBooks[i]->getAuthors();
-            for (int j = 0; j < authorsBook.size(); j++)
-                if (authorsBook[j].author->getID() == filter->getID())
-                    pages += this->multiAuthorBooks[i]->getPages() * authorsBook[j].percentage / 100;
+            pages += this->multiAuthorBooks[i]->countPages(filter);
         }
 
     for (int i = 0; i < this->authorByChapterBooks.size(); i++)
@@ -203,11 +207,7 @@ int MainWindow::getPagesOrBooks(QDate begin, QDate end, Author *author, bool mod
             && (isAfter(*this->authorByChapterBooks[i]->getDate(), begin))
             && (isAfter(end, *this->authorByChapterBooks[i]->getDate()))){
             books++;
-            QVector<Author*> authorsBook = this->authorByChapterBooks[i]->getAuthorsList();
-            for (int j = 0; j < authorsBook.size(); j++)
-                if (authorsBook[j]->getID() == filter->getID())
-                    pages += this->authorByChapterBooks[i]->getPages() /
-                            this->authorByChapterBooks[i]->numberOfChapters();
+            pages += this->authorByChapterBooks[i]->countPages(filter);
         }
     if (mode)
         return pages;
@@ -281,11 +281,29 @@ void MainWindow::update() {
         }
         else  {
             int booksSize = selectedBooks.size();
-            //  TODO write method
+            int *pages;
+            pages = new int[booksSize];
+            for (int i = 0; i < booksSize; i++) {
+                pages[i] = selectedBooks[i]->countPages(filter);
+            }
+
+            //  Bubble sort for pages
+            for (int i = 0; i < booksSize; i++)
+                for (int j = 0; j < booksSize - 1; j++)
+                    if (((pages[j] > pages[j + 1]) && orderMode == "Increasing") ||
+                        ((!(pages[j] > pages[j + 1])) && orderMode != "Increasing")) {
+                        BaseBook* sub = selectedBooks[j];
+                        selectedBooks[j] = selectedBooks[j + 1];
+                        selectedBooks[j + 1] = sub;
+                        int subInt = pages[j];
+                        pages[j] = pages[j + 1];
+                        pages[j + 1] = subInt;
+                    }
         }
     }
     putBooks();
     putAuthors();
+    displayAuthor();
 }
 
 //  Puts books to the books list
@@ -309,14 +327,18 @@ void MainWindow::putBooks() {
     }
 }
 
-
 //  Puts authors to the authors list
 void MainWindow::putAuthors() {
+    ui->searchAuthor->setText("");
     int authorsSize = this->authors.size();
     vector<AuthorName> bookAuthors;
     ui->authorsList->clear();
     for (int i = 0; i < authorsSize; i++) {
         ui->authorsList->addItem(this->authors[i]->getName());
+        if (this->filter != NULL && (this->filter->getName() == this->authors[i]->getName()))
+            ui->authorsList->item(i)->setTextColor(QColor(0, 121, 107));
+        else
+            ui->authorsList->item(i)->setTextColor(QColor(0, 0, 0));
     }
 }
 

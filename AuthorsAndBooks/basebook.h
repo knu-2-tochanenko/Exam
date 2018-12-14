@@ -58,6 +58,7 @@ public:
 
     //  For type
     virtual int getType() = 0;
+    virtual int countPages(Author* author) = 0;
 protected:
     QString ISBN;       //  It'll be generated randomly
     QString name;

@@ -23,6 +23,7 @@ public:
     int numberOfChapters();
 
     int getType();
+    int countPages(Author* author);
 private:
     //  Chapter - to Author
     QMap<int, AuthorName> authors;

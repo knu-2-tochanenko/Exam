@@ -46,3 +46,11 @@ MultiAuthorBook *MultiAuthorBook::generate(QVector<AuthorWithPercentage> const &
 int MultiAuthorBook::getType() {
     return 2;
 }
+
+int MultiAuthorBook::countPages(Author *author) {
+    int pages = 0;
+    for (int j = 0; j < this->authors.size(); j++)
+        if (this->authors[j].author->getID() == author->getID())
+            pages += this->pages * this->authors[j].percentage / 100;
+    return pages;
+}

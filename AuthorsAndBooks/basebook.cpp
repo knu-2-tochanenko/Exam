@@ -66,7 +66,7 @@ void BaseBook::setISBN(QString const &ISBN) {
 
 void BaseBook::generateNumbers() {
      
-    int year = rand() % 265 + 1753;
+    int year = rand() % 300 + 1753;
     int month = rand() % 12;
     int day = rand() % 31;
     Utility.normalize(year, month, day);

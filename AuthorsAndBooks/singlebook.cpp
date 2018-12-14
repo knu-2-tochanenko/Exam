@@ -19,7 +19,7 @@ SingleBook *SingleBook::generate() {
     for (int i = 0; i < 13; i++)
         ISBN += static_cast<char>(rand() % 10 + '0');
     book->setISBN(ISBN);
-    int year = rand() % 265 + 1753;
+    int year = rand() % 300 + 1753;
     int month = rand() % 12;
     int day = rand() % 31;
     Utility.normalize(year, month, day);
@@ -32,4 +32,8 @@ SingleBook *SingleBook::generate() {
 
 int SingleBook::getType() {
     return -1;
+}
+
+int SingleBook::countPages(Author *author) {
+    return this->pages;
 }

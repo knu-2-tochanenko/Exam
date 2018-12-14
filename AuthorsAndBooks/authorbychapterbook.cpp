@@ -48,3 +48,11 @@ int AuthorByChapterBook::numberOfChapters() {
 int AuthorByChapterBook::getType() {
     return 1;
 }
+
+int AuthorByChapterBook::countPages(Author *author) {
+    int pages = 0;
+    for (int i = 0; i < this->authors.size(); i++)
+        if (this->authors[i].author->getID() == author->getID())
+            pages += this->pages / this->numberOfChapters();
+    return pages;
+}

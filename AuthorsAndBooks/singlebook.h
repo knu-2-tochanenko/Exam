@@ -12,6 +12,7 @@ public:
     static SingleBook* generate();
 
     int getType();
+    int countPages(Author* author);
 };
 
 #endif // SINGLEBOOK_H

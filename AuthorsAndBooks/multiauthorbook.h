@@ -21,6 +21,7 @@ public:
     static MultiAuthorBook *generate(QVector<AuthorWithPercentage> const &authorsMap);
 
     int getType();
+    int countPages(Author* author);
 private:
     //  Author - to coeff
     QVector<AuthorWithPercentage> authors;

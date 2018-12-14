@@ -21,6 +21,7 @@ public:
     static SingleAuthorBook *generate(AuthorName const &authorName);
 
     int getType();
+    int countPages(Author* author);
 private:
     AuthorName author;
 };

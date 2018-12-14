@@ -35,6 +35,10 @@ private slots:
     //  For authors list
     void onListMailItemClicked(QListWidgetItem* listWidgetItem);
 
+    //  For date pickers
+    void on_dateBegin_dateChanged();
+    void on_dateEnd_dateChanged();
+
 private:
     //////////////////////////////////////////////////////////////
     ///////////////////// TASK FUNCTIONS  ////////////////////////

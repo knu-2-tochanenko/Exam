@@ -38,3 +38,7 @@ SingleAuthorBook *SingleAuthorBook::generate(AuthorName const &authorName) {
 int SingleAuthorBook::getType() {
     return 0;
 }
+
+int SingleAuthorBook::countPages(Author *author) {
+    return this->pages;
+}
