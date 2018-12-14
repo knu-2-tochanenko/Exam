@@ -40,8 +40,12 @@ void BookWidget::update() {
 
     QString authorsString = "";
 
-    for (int i = 0; i < numberOfAuthors; i++)
-        authorsString += this->authors[i].author->getNickName(this->authors[i].name) + "\n";
+    for (int i = 0; i < numberOfAuthors; i++) {
+        authorsString += this->authors[i].author->getNickName(this->authors[i].name);
+        if (this->authors[i].name > 0)
+            authorsString += " (" + this->authors[i].author->getNickName(0) + ")";
+        authorsString += "\n";
+    }
 
     ui->bookAuthors->setText(authorsString);
 

@@ -44,6 +44,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->filerMode, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(switchcall(const QString&)));
     connect(ui->orderMode, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(switchcall(const QString&)));
 
+    //  Connect list of authors
+    connect(ui->authorsList, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(onListMailItemClicked(QListWidgetItem*)));
+
     //  Set smooth scroll
     ui->booksList->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 
@@ -63,10 +66,12 @@ void MainWindow::on_buttonGenerateAuthor_clicked() {
 }
 
 void MainWindow::on_buttonGenerateBook_clicked() {
-    int bookType = rand() % 3;
-    if (bookType == 0)
+    int bookType = rand() % 3, coef;
+    if (bookType == 0) {
+        coef = rand() % this->authors.size();
         this->singleAuthorBooks.push_back(
-            SingleAuthorBook::generate(AuthorName(this->authors[rand() % this->authors.size()], rand() % 3)));
+            SingleAuthorBook::generate(AuthorName(this->authors[coef], rand() % (this->authors[coef]->getNicknamesCount() + 1))));
+    }
     else if (bookType == 1) {
         QVector<AuthorWithPercentage> authorsMap;
         int randomNumberOfAuthors = rand() % (this->authors.size() / 2) + 1;
@@ -75,7 +80,7 @@ void MainWindow::on_buttonGenerateBook_clicked() {
             Author* author = this->authors[rand() % this->authors.size()];
             int currentPercentage = rand() % percentage;
             percentage -= currentPercentage;
-            authorsMap.push_back(AuthorWithPercentage(author, rand() % 3, currentPercentage));
+            authorsMap.push_back(AuthorWithPercentage(author, rand() % (author->getNicknamesCount() + 1), currentPercentage));
         }
         this->multiAuthorBooks.push_back(
             MultiAuthorBook::generate(authorsMap));
@@ -85,7 +90,7 @@ void MainWindow::on_buttonGenerateBook_clicked() {
         int numberOfChapters = rand() % 8;
         for (int i = 0; i < numberOfChapters; i++) {
             Author* author = this->authors[rand() % this->authors.size()];
-            authorsMap.insert(i, AuthorName(author, rand() % 3));
+            authorsMap.insert(i, AuthorName(author, rand() % (author->getNicknamesCount() + 1)));
         }
         this->authorByChapterBooks.push_back(
             AuthorByChapterBook::generate(authorsMap));
@@ -111,6 +116,16 @@ void MainWindow::on_searchAuthor_textChanged() {
     }
 }
 
+void MainWindow::onListMailItemClicked(QListWidgetItem *listWidgetItem) {
+    for (int i = 0; i < this->authors.size(); i++)
+        if (this->authors[i]->getName() == listWidgetItem->text()) {
+            filter = this->authors[i];
+            return;
+        }
+    filter = NULL;
+    MainWindow::update();
+}
+
 void MainWindow::update() {
     QString currentMode = ui->filerMode->currentText();
     QString orderMode = ui->orderMode->currentText();
@@ -120,8 +135,10 @@ void MainWindow::update() {
     if (this->filter == NULL) {
         for (int i = 0; i < this->singleAuthorBooks.size(); i++)
             selectedBooks.push_back(this->singleAuthorBooks[i]);
+
         for (int i = 0; i < this->multiAuthorBooks.size(); i++)
             selectedBooks.push_back(this->multiAuthorBooks[i]);
+
         for (int i = 0; i < this->authorByChapterBooks.size(); i++)
             selectedBooks.push_back(this->authorByChapterBooks[i]);
     }
@@ -129,9 +146,11 @@ void MainWindow::update() {
         for (int i = 0; i < this->singleAuthorBooks.size(); i++)
             if (this->singleAuthorBooks[i]->hasAuthor(this->filter))
                 selectedBooks.push_back(this->singleAuthorBooks[i]);
+
         for (int i = 0; i < this->multiAuthorBooks.size(); i++)
             if (this->multiAuthorBooks[i]->hasAuthor(this->filter))
                 selectedBooks.push_back(this->multiAuthorBooks[i]);
+
         for (int i = 0; i < this->authorByChapterBooks.size(); i++)
             if (this->authorByChapterBooks[i]->hasAuthor(this->filter))
                 selectedBooks.push_back(this->authorByChapterBooks[i]);

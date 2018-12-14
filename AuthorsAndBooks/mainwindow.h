@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "author.h"
 #include "basebook.h"
+#include <QListWidget>
 #include <vector>
 
 #include "authorbychapterbook.h"
@@ -30,6 +31,9 @@ private slots:
 
     //  Search field
     void on_searchAuthor_textChanged();
+
+    //  For authors list
+    void onListMailItemClicked(QListWidgetItem* listWidgetItem);
 
 private:
     //  Updates all views
