@@ -4765,7 +4765,7 @@ public:
     enum Name { SCIENCE_FICTION, SATIRE, DRAMA, ADVENTURE, ROMANCE, MYSTERY, HORROR,
                GUIDE, SCIENCE, MATH, HISTORY, POETRY, COMICS, DICTIONARY, ART, BIOGRAPHY,
                DIARY, FANTASY, UNRECOGNIZED };
-    static QString to_string(Genre::Name name);
+    static QString toString(Genre::Name name);
     static Name getRandom();
 };
 

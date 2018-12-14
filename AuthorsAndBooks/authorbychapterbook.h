@@ -15,10 +15,14 @@ public:
 
     //  Get authors list for displaying the book
     QVector<Author*> getAuthorsList();
-    QVector<AuthorName> getAuthorsWithNick();
+    QVector<AuthorWithPercentage> getAuthorsWithNick();
 
     //  Generate random
     static AuthorByChapterBook *generate(QMap<int, AuthorName> const &authorsMap);
+
+    int numberOfChapters();
+
+    int getType();
 private:
     //  Chapter - to Author
     QMap<int, AuthorName> authors;

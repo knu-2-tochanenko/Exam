@@ -10,11 +10,12 @@ MultiAuthorBook::MultiAuthorBook(SingleBook* book, QVector<AuthorWithPercentage>
     this->authors = authors;
 }
 
-QVector<AuthorName> MultiAuthorBook::getAuthorsWithNick() {
+QVector<AuthorWithPercentage> MultiAuthorBook::getAuthorsWithNick() {
     int authorsSize = this->authors.size();
-    QVector<AuthorName> res;
+    QVector<AuthorWithPercentage> res;
     for (int i = 0; i < authorsSize; i++)
-        res.push_back(AuthorName(this->authors[i].author, this->authors[i].name));
+        res.push_back(AuthorWithPercentage(
+                          this->authors[i].author, this->authors[i].name, this->authors[i].percentage));
     return res;
 }
 
@@ -40,4 +41,8 @@ QVector<Author *> MultiAuthorBook::getAuthorsList() {
 MultiAuthorBook *MultiAuthorBook::generate(QVector<AuthorWithPercentage> const &authorsMap) {
     MultiAuthorBook* newBook = new MultiAuthorBook(SingleBook::generate(), authorsMap);
     return newBook;
+}
+
+int MultiAuthorBook::getType() {
+    return 2;
 }

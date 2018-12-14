@@ -45,7 +45,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->orderMode, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(switchcall(const QString&)));
 
     //  Connect list of authors
-    connect(ui->authorsList, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(onListMailItemClicked(QListWidgetItem*)));
+    connect(ui->authorsList, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
+            this, SLOT(onListMailItemClicked(QListWidgetItem*)));
 
     //  Set smooth scroll
     ui->booksList->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
@@ -74,7 +75,7 @@ void MainWindow::on_buttonGenerateBook_clicked() {
     }
     else if (bookType == 1) {
         QVector<AuthorWithPercentage> authorsMap;
-        int randomNumberOfAuthors = rand() % (this->authors.size() / 2) + 1;
+        int randomNumberOfAuthors = rand() % (this->authors.size() / 2) + 2;
         int percentage = 100;
         for (int i = 0; i < randomNumberOfAuthors; i++) {
             Author* author = this->authors[rand() % this->authors.size()];
@@ -87,7 +88,7 @@ void MainWindow::on_buttonGenerateBook_clicked() {
     }
     else {
         QMap<int, AuthorName> authorsMap;
-        int numberOfChapters = rand() % 8;
+        int numberOfChapters = rand() % 8 + 2;
         for (int i = 0; i < numberOfChapters; i++) {
             Author* author = this->authors[rand() % this->authors.size()];
             authorsMap.insert(i, AuthorName(author, rand() % (author->getNicknamesCount() + 1)));
@@ -117,13 +118,89 @@ void MainWindow::on_searchAuthor_textChanged() {
 }
 
 void MainWindow::onListMailItemClicked(QListWidgetItem *listWidgetItem) {
-    for (int i = 0; i < this->authors.size(); i++)
-        if (this->authors[i]->getName() == listWidgetItem->text()) {
-            filter = this->authors[i];
-            return;
+    if (filter != NULL && filter->getName() == listWidgetItem->text()) {
+        filter = NULL;
+        listWidgetItem->setTextColor(QColor(0, 0, 0));
+    }
+    else
+        for (int i = 0; i < this->authors.size(); i++)
+            if (this->authors[i]->getName() == listWidgetItem->text()) {
+                filter = this->authors[i];
+                listWidgetItem->setTextColor(QColor(0, 121, 107));
+                break;
+            }
+    displayAuthor();
+    update();
+}
+
+int MainWindow::numberOfPages(QDate begin, QDate end, Author *author) {
+    getPagesOrBooks(begin, end, author, true);
+}
+
+int MainWindow::numberOfBooks(QDate begin, QDate end, Author *author) {
+    getPagesOrBooks(begin, end, author, false);
+}
+
+QString MainWindow::getGenres(QDate begin, QDate end, Author *author) {
+    QVector<QString> res;
+    if (filter == NULL)
+        return "";
+
+    for (int i = 0; i < this->singleAuthorBooks.size(); i++)
+        if (this->singleAuthorBooks[i]->hasAuthor(this->filter))
+            if (!res.contains(Genre::toString(this->singleAuthorBooks[i]->getGenre())))
+                res.push_back(Genre::toString(this->singleAuthorBooks[i]->getGenre()));
+
+    for (int i = 0; i < this->multiAuthorBooks.size(); i++)
+        if (this->multiAuthorBooks[i]->hasAuthor(this->filter))
+            if (!res.contains(Genre::toString(this->multiAuthorBooks[i]->getGenre())))
+                res.push_back(Genre::toString(this->multiAuthorBooks[i]->getGenre()));
+
+    for (int i = 0; i < this->authorByChapterBooks.size(); i++)
+        if (this->authorByChapterBooks[i]->hasAuthor(this->filter))
+            if (!res.contains(Genre::toString(this->authorByChapterBooks[i]->getGenre())))
+                res.push_back(Genre::toString(this->authorByChapterBooks[i]->getGenre()));
+
+    QString resString = "";
+    for (int i = 0; i < res.size(); i++)
+        resString += res[i] + "\n";
+    return  resString;
+}
+
+int MainWindow::getPagesOrBooks(QDate begin, QDate end, Author *author, bool mode) {
+    if (this->filter == NULL)
+        return -1;
+
+    int pages = 0, books = 0;
+
+    for (int i = 0; i < this->singleAuthorBooks.size(); i++)
+        if (this->singleAuthorBooks[i]->hasAuthor(this->filter)) {
+            books++;
+            pages += this->singleAuthorBooks[i]->getPages();
         }
-    filter = NULL;
-    MainWindow::update();
+
+    for (int i = 0; i < this->multiAuthorBooks.size(); i++)
+        if (this->multiAuthorBooks[i]->hasAuthor(this->filter)) {
+            books++;
+            QVector<AuthorWithPercentage> authorsBook = this->multiAuthorBooks[i]->getAuthors();
+            for (int j = 0; j < authorsBook.size(); j++)
+                if (authorsBook[i].author->getID() == filter->getID())
+                    pages += this->multiAuthorBooks[i]->getPages() * authorsBook[i].percentage / 100;
+        }
+
+    for (int i = 0; i < this->authorByChapterBooks.size(); i++)
+        if (this->authorByChapterBooks[i]->hasAuthor(this->filter)) {
+            books++;
+            QVector<Author*> authorsBook = this->authorByChapterBooks[i]->getAuthorsList();
+            for (int j = 0; j < authorsBook.size(); j++)
+                if (authorsBook[i]->getID() == filter->getID())
+                    pages += this->authorByChapterBooks[i]->getPages() /
+                            this->authorByChapterBooks[i]->numberOfChapters();
+        }
+    if (mode)
+        return pages;
+    else
+        return books;
 }
 
 void MainWindow::update() {
@@ -202,7 +279,7 @@ void MainWindow::update() {
 //  Puts books to the books list
 void MainWindow::putBooks() {
     int booksSize = this->selectedBooks.size();
-    QVector<AuthorName> bookAuthors;
+    QVector<AuthorWithPercentage> bookAuthors;
     ui->booksList->clear();
     for (int i = 0; i < booksSize; i++) {
 
@@ -214,7 +291,7 @@ void MainWindow::putBooks() {
         ui->booksList->addItem(listWidgetItem);
         BookWidget *snv = new BookWidget;
         snv->setStyleSheet("BookWidget {border-bottom: 1px solid #BDBDBD}");
-        snv->getInformation(selectedBooks[i], bookAuthors);
+        snv->getInformation(selectedBooks[i], bookAuthors, selectedBooks[i]->getType());
         listWidgetItem->setSizeHint(QSize(snv->sizeHint().width(), snv->getHeight()));
         ui->booksList->setItemWidget(listWidgetItem, snv);
     }
@@ -228,6 +305,21 @@ void MainWindow::putAuthors() {
     ui->authorsList->clear();
     for (int i = 0; i < authorsSize; i++) {
         ui->authorsList->addItem(this->authors[i]->getName());
+    }
+}
+
+void MainWindow::displayAuthor() {
+    if (this->filter == NULL) {
+        ui->authorName->setText("Select Author");
+        ui->authorBooksCount->setText("---");
+        ui->authorPagesCount->setText("---");
+        ui->authorGenres->setText("---");
+    }
+    else {
+        ui->authorName->setText(filter->getName());
+        ui->authorBooksCount->setNum(numberOfBooks(ui->dateBegin->date(), ui->dateEnd->date(), filter));
+        ui->authorPagesCount->setNum(numberOfPages(ui->dateBegin->date(), ui->dateEnd->date(), filter));
+        ui->authorGenres->setText(getGenres(ui->dateBegin->date(), ui->dateEnd->date(), filter));
     }
 }
 

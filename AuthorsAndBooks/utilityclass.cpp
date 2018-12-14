@@ -53,7 +53,7 @@ void UtilityClass::errorMSG(QString message) {
     messageBox.exec();
 }
 
-QString Genre::to_string(Genre::Name name) {
+QString Genre::toString(Genre::Name name) {
     switch (name) {
         case SCIENCE_FICTION:
             return "Science fictoin";

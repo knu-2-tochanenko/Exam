@@ -20,7 +20,7 @@ public:
     explicit BookWidget(QWidget *parent = nullptr);
     ~BookWidget();
 
-    void getInformation(BaseBook* book, QVector<AuthorName> authors);
+    void getInformation(BaseBook* book, QVector<AuthorWithPercentage> authors, int type);
 
     //  Draws information
     void update();
@@ -33,8 +33,13 @@ private:
 
     //  Data
     BaseBook* book;
-    QVector<AuthorName> authors;
+    QVector<AuthorWithPercentage> authors;
     int height = 0;
+    /* type:
+     *  0 : SingleAuthorBook
+     *  1 : AuthorByChapterBook
+     *  2 : MultiAuthorBook         */
+    int type;
 
     //  To draw bottom line
     void paintEvent(QPaintEvent *);

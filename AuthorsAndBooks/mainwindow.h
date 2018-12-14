@@ -36,10 +36,27 @@ private slots:
     void onListMailItemClicked(QListWidgetItem* listWidgetItem);
 
 private:
+    //////////////////////////////////////////////////////////////
+    ///////////////////// TASK FUNCTIONS  ////////////////////////
+    //////////////////////////////////////////////////////////////
+
+    int numberOfPages(QDate begin, QDate end, Author* author);
+    int numberOfBooks(QDate begin, QDate end, Author* author);
+
+
+    //////////////////////////////////////////////////////////////
+    ///////////////////// TASK FUNCTIONS  ////////////////////////
+    //////////////////////////////////////////////////////////////
+
+    QString getGenres(QDate begin, QDate end, Author* author);
+    //  true - pages, false - books
+    int getPagesOrBooks(QDate begin, QDate end, Author* author, bool mode);
+
     //  Updates all views
     void update();
     void putBooks();
     void putAuthors();
+    void displayAuthor();
     QVector<BaseBook*> selectedBooks; //    Vector for selecting books
 
     //  Selected author

@@ -10,7 +10,7 @@ public:
     MultiAuthorBook(QString name, Genre::Name genre, QDate* date, int pages, QVector<AuthorWithPercentage> authors);
     MultiAuthorBook(SingleBook* book, QVector<AuthorWithPercentage> const authors);
 
-    QVector<AuthorName> getAuthorsWithNick();
+    QVector<AuthorWithPercentage> getAuthorsWithNick();
     QVector<AuthorWithPercentage> getAuthors() const;
     bool hasAuthor(Author* author);
 
@@ -19,6 +19,8 @@ public:
 
     //  Generate random
     static MultiAuthorBook *generate(QVector<AuthorWithPercentage> const &authorsMap);
+
+    int getType();
 private:
     //  Author - to coeff
     QVector<AuthorWithPercentage> authors;

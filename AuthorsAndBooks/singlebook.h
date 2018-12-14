@@ -6,10 +6,12 @@
 class SingleBook : public BaseBook {
 public:
     QVector<Author*> getAuthorsList();
-    QVector<AuthorName> getAuthorsWithNick();
+    QVector<AuthorWithPercentage> getAuthorsWithNick();
     bool hasAuthor(Author* author);
 
     static SingleBook* generate();
+
+    int getType();
 };
 
 #endif // SINGLEBOOK_H

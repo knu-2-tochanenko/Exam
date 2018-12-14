@@ -28,15 +28,23 @@ QVector<Author *> AuthorByChapterBook::getAuthorsList() {
     return res;
 }
 
-QVector<AuthorName> AuthorByChapterBook::getAuthorsWithNick() {
+QVector<AuthorWithPercentage> AuthorByChapterBook::getAuthorsWithNick() {
     int authorsSize = this->authors.size();
-    QVector<AuthorName> res;
+    QVector<AuthorWithPercentage> res;
     for (int i = 0; i < authorsSize; i++)
-        res.push_back(AuthorName(this->authors[i].author, this->authors[i].name));
+        res.push_back(AuthorWithPercentage(this->authors[i].author, this->authors[i].name, 0));
     return res;
 }
 
 AuthorByChapterBook *AuthorByChapterBook::generate(QMap<int, AuthorName> const &authorsMap) {
     AuthorByChapterBook* newBook = new AuthorByChapterBook(SingleBook::generate(), authorsMap);
     return newBook;
+}
+
+int AuthorByChapterBook::numberOfChapters() {
+    return this->authors.size();
+}
+
+int AuthorByChapterBook::getType() {
+    return 1;
 }

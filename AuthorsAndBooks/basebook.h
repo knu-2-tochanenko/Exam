@@ -53,8 +53,11 @@ public:
 
     //  Get authors list for displaying the book
     virtual QVector<Author*> getAuthorsList() = 0;
-    virtual QVector<AuthorName> getAuthorsWithNick() = 0;
+    virtual QVector<AuthorWithPercentage> getAuthorsWithNick() = 0;
     virtual bool hasAuthor(Author* author) = 0;
+
+    //  For type
+    virtual int getType() = 0;
 protected:
     QString ISBN;       //  It'll be generated randomly
     QString name;

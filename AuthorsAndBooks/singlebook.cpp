@@ -4,8 +4,8 @@ QVector<Author *> SingleBook::getAuthorsList() {
     return QVector<Author *>();
 }
 
-QVector<AuthorName> SingleBook::getAuthorsWithNick() {
-    return QVector<AuthorName>();
+QVector<AuthorWithPercentage> SingleBook::getAuthorsWithNick() {
+    return QVector<AuthorWithPercentage>();
 }
 
 bool SingleBook::hasAuthor(Author *author) {
@@ -28,4 +28,8 @@ SingleBook *SingleBook::generate() {
     book->setGenre(Genre::getRandom());
     book->setPages(rand() % MAX_PAGES);
     return book;
+}
+
+int SingleBook::getType() {
+    return -1;
 }

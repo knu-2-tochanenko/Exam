@@ -15,10 +15,12 @@ public:
 
     //  Get authors list for displaying the book
     QVector<Author*> getAuthorsList();
-    QVector<AuthorName> getAuthorsWithNick();
+    QVector<AuthorWithPercentage> getAuthorsWithNick();
 
     //  Generate random
     static SingleAuthorBook *generate(AuthorName const &authorName);
+
+    int getType();
 private:
     AuthorName author;
 };

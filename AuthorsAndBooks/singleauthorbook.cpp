@@ -24,13 +24,17 @@ QVector<Author *> SingleAuthorBook::getAuthorsList() {
     return res;
 }
 
-QVector<AuthorName> SingleAuthorBook::getAuthorsWithNick() {
-    QVector<AuthorName> res;
-    res.push_back(this->author);
+QVector<AuthorWithPercentage> SingleAuthorBook::getAuthorsWithNick() {
+    QVector<AuthorWithPercentage> res;
+    res.push_back(AuthorWithPercentage(this->author.author, this->author.name, 1));
     return res;
 }
 
 SingleAuthorBook *SingleAuthorBook::generate(AuthorName const &authorName) {
     SingleAuthorBook* newBook = new SingleAuthorBook(SingleBook::generate(), authorName);
     return newBook;
+}
+
+int SingleAuthorBook::getType() {
+    return 0;
 }
