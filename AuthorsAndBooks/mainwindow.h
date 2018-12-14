@@ -27,6 +27,10 @@ private slots:
     void on_buttonGenerateAuthor_clicked();
     void on_buttonGenerateBook_clicked();
     void switchcall(const QString&);
+
+    //  Search field
+    void on_searchAuthor_textChanged();
+
 private:
     //  Updates all views
     void update();

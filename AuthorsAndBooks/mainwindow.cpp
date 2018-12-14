@@ -97,6 +97,20 @@ void MainWindow::switchcall(const QString &) {
     update();
 }
 
+void MainWindow::on_searchAuthor_textChanged() {
+    if (ui->searchAuthor->text() == "")
+        putAuthors();
+    else {
+        int authorsSize = this->authors.size();
+        vector<AuthorName> bookAuthors;
+        ui->authorsList->clear();
+        for (int i = 0; i < authorsSize; i++) {
+            if (this->authors[i]->getName().indexOf(ui->searchAuthor->text()) >= 0)
+                ui->authorsList->addItem(this->authors[i]->getName());
+        }
+    }
+}
+
 void MainWindow::update() {
     QString currentMode = ui->filerMode->currentText();
     QString orderMode = ui->orderMode->currentText();
