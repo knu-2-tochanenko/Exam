@@ -7,8 +7,20 @@
     <x>0</x>
     <y>0</y>
     <width>850</width>
-    <height>690</height>
+    <height>683</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>850</width>
+    <height>683</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>850</width>
+    <height>683</height>
+   </size>
   </property>
   <property name="font">
    <font>
