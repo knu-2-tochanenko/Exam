@@ -19,10 +19,14 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //srand();
 
-    //  Add strings to ComboBox
+    //  Add strings to filter mode
     ui->filerMode->addItem("Date");
     ui->filerMode->addItem("Pages");
     ui->filerMode->addItem("Author's pages");
+
+    //  Add strings to order mode
+    ui->orderMode->addItem("Increasing");
+    ui->orderMode->addItem("Decreasing");
 
     //  Initialize author filter
     this->filter = NULL;
@@ -38,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //  Connect with updating combobox
     connect(ui->filerMode, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(switchcall(const QString&)));
+    connect(ui->orderMode, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(switchcall(const QString&)));
 
     //  Set smooth scroll
     ui->booksList->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
@@ -94,6 +99,7 @@ void MainWindow::switchcall(const QString &) {
 
 void MainWindow::update() {
     QString currentMode = ui->filerMode->currentText();
+    QString orderMode = ui->orderMode->currentText();
 
     //  Push all books to single list
     selectedBooks.clear();
@@ -122,10 +128,14 @@ void MainWindow::update() {
         int booksSize = selectedBooks.size();
         for (int i = 0; i < booksSize; i++)
             for (int j = 0; j < booksSize - 1; j++)
-                if (selectedBooks[j]->getDate() < selectedBooks[j + 1]->getDate()) {
+                if ((isAfter(*selectedBooks[j]->getDate(), *selectedBooks[j + 1]->getDate())
+                    && orderMode == "Increasing") ||
+                    (!isAfter(*selectedBooks[j]->getDate(), *selectedBooks[j + 1]->getDate())
+                    && orderMode != "Increasing")) {
                     BaseBook* sub = selectedBooks[j];
                     selectedBooks[j] = selectedBooks[j + 1];
-                    selectedBooks[j + 1] = sub;
+                    selectedBooks.replace(j, selectedBooks[j + 1]);
+                    selectedBooks.replace(j + 1, sub);
                 }
     }
     else if (currentMode == "Pages") {
@@ -133,7 +143,10 @@ void MainWindow::update() {
         int booksSize = selectedBooks.size();
         for (int i = 0; i < booksSize; i++)
             for (int j = 0; j < booksSize - 1; j++)
-                if (selectedBooks[j]->getPages() > selectedBooks[j + 1]->getPages()) {
+                if (((selectedBooks[j]->getPages() > selectedBooks[j + 1]->getPages())
+                    && orderMode == "Increasing") ||
+                    ((!(selectedBooks[j]->getPages() > selectedBooks[j + 1]->getPages()))
+                    && orderMode != "Increasing")) {
                     BaseBook* sub = selectedBooks[j];
                     selectedBooks[j] = selectedBooks[j + 1];
                     selectedBooks[j + 1] = sub;
@@ -183,4 +196,16 @@ void MainWindow::putAuthors() {
     for (int i = 0; i < authorsSize; i++) {
         ui->authorsList->addItem(this->authors[i]->getName());
     }
+}
+
+bool MainWindow::isAfter(QDate &date, QDate &final) {
+    if (date.year() > final.year())
+        return true;
+    else if (date.year() == final.year())
+        if (date.month() > final.month())
+            return true;
+        else if (date.month() == final.month())
+            if (date.day() > final.day())
+                return true;
+    return false;
 }

@@ -44,6 +44,9 @@ private:
     //  Generates random author
     Author *generateAuthor();
 
+    //  Check for greater day
+    bool isAfter(QDate &date, QDate &final);
+
     //  Generates random number and nickname book
     //  with given authors
     SingleAuthorBook *generateSingleAuthorBook();
