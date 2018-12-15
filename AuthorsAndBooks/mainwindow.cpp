@@ -141,11 +141,11 @@ void MainWindow::on_dateEnd_dateChanged() {
 }
 
 int MainWindow::numberOfPages(QDate begin, QDate end, Author *author) {
-    getPagesOrBooks(begin, end, author, true);
+    return getPagesOrBooks(begin, end, author, true);
 }
 
 int MainWindow::numberOfBooks(QDate begin, QDate end, Author *author) {
-    getPagesOrBooks(begin, end, author, false);
+    return getPagesOrBooks(begin, end, author, false);
 }
 
 QString MainWindow::getGenres(QDate begin, QDate end, Author *author) {
