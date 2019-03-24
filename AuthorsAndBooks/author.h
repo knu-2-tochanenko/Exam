@@ -1,6 +1,7 @@
 #ifndef AUTHOR_H
 #define AUTHOR_H
 
+#include <QObject>
 #include <QString>
 #include <QStringList>
 #include "utilityclass.h"
@@ -23,6 +24,7 @@ public:
     //  Generate random
     static Author *generate(int ID);
     void generateValues();
+
 private:
     int ID;
     QString name;

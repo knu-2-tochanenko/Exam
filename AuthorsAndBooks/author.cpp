@@ -38,7 +38,6 @@ int Author::getNicknamesCount() const {
 }
 
 Author *Author::generate(int ID) {
-     
     Author* newAuthor = new Author();
     newAuthor->ID = ID;
     newAuthor->name = Utility.getRandomName();
@@ -52,7 +51,6 @@ Author *Author::generate(int ID) {
 }
 
 void Author::generateValues() {
-     
     this->name = Utility.getRandomName();
     int numberOfNickNames = rand() % 4;
     this->nickNames.clear();

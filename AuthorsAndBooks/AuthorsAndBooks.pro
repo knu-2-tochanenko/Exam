@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+QT       += testlib
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -45,7 +46,8 @@ HEADERS += \
     multiauthorbook.h \
     authorbychapterbook.h \
     basebook.h \
-    singlebook.h
+    singlebook.h \
+    test.h
 
 FORMS += \
         mainwindow.ui \
